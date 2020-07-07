@@ -43,7 +43,14 @@ void cInstance::read(
 
 void cInstance::cut()
 {
+        // sort orders into levels of the same height
+        Levels( *this );
 
+        // allocate levels to stock
+        LevelsToStock( *this );
+
+        // cut out orders from stock by level
+        LevelCuts( *this );
 }
 
 void cInstance::expandCount()
@@ -53,23 +60,27 @@ void cInstance::expandCount()
 }
 void cInstance::expandCount( spaceV_t& tv )
 {
-//    spaceV_t ex;
-//    for( auto& t : tv )
-//    {
-//        if( t->myCount <= 0 )
-//            throw std::runtime_error("Bad count for " + t->myUserID );
-//
-//        // construct required number of copies, append copy number to userID
-//        for( int k = 0; k < t->myCount-1; k++ )
-//        {
-//            space_t newTimber( new cTimber( *t.get() ) );
-//            newTimber->myUserID = t->myUserID + ":" + std::to_string( k+2 );
-//            ex.push_back( newTimber );
-//        }
-//    }
-//    tv.insert(
-//        tv.end(),
-//        ex.begin(), ex.end() );
+    spaceV_t ex;
+    for( auto& s : tv )
+    {
+        spaceV_t sv = s->expand();
+        ex.insert(
+                  ex.end(),
+                  sv.begin(), sv.end() );
+    }
+    tv.insert(
+        tv.end(),
+        ex.begin(), ex.end() );
+}
+
+std::string cInstance::textProblem()
+{
+    std::stringstream ss;
+    for( auto& s : myOrder )
+    {
+        ss << s->text() << "\n";
+    }
+    return ss.str();
 }
 
 std::string cInstance::textSolution()

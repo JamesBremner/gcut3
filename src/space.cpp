@@ -48,8 +48,10 @@ spaceV_t cSpace::expand()
     {
         space_t newTimber( new cSpace( *this ) );
         newTimber->myUserID = myUserID + ":" + std::to_string( k+2 );
+        newTimber->count(1);
         ex.push_back( newTimber );
     }
+    myCount = 1;
     return ex;
 }
 void cSpace::rotateLWH()
@@ -67,5 +69,12 @@ void cSpace::rotateLWH()
 //    for( int i : vLWH )
 //        std::cout << i <<" ";
 //    std::cout << "\n";
+}
+
+std::string cSpace::text()
+{
+    std::stringstream ss;
+    ss <<  myLength <<" "<< myWidth <<" "<< myHeight <<" "<< myCount <<" " << myUserID;
+    return ss.str();
 }
 }

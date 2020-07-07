@@ -51,10 +51,33 @@ public:
     {
         return myUserID;
     }
-
+    void ID( const std::string& id )
+    {
+        myUserID = id;
+    }
+        bool isPacked() const
+    {
+        return myPacked;
+    }
+    void usedbyLevel( bool f )
+    {
+        myUsedbyLevel = f;
+    }
+    bool isUsedbyLevel()
+    {
+        return myUsedbyLevel;
+    }
+    void count( int c )
+    {
+        myCount = c;
+    }
+    std::string text();
 private:
     int         myCount;
     std::string myUserID;
+    bool        myPacked;      // true if an order that has been allocated
+    bool        myUsedbyLevel;  // true if stock has been allocated to current level
+
 };
 
 //class cTimber : public cSpace
