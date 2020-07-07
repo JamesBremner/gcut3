@@ -68,6 +68,7 @@ void cInstance::expandCount( spaceV_t& tv )
                   ex.end(),
                   sv.begin(), sv.end() );
     }
+    std::cout << "cInstance::expandCount " << tv.size() <<" "<< ex.size() << "\n";
     tv.insert(
         tv.end(),
         ex.begin(), ex.end() );

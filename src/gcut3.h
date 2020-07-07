@@ -19,6 +19,9 @@ public:
 
     cSpace( int L, int W, int H )
         : myLength( L ), myWidth( W ), myHeight{ H }
+        , myCount( 1 )
+        , myPacked( false )
+        , myUsed( false )
     {
 
     }
@@ -32,6 +35,14 @@ public:
         const std::string& l );
 
     spaceV_t expand();
+
+    /** Cut the order
+    @param[in] l length position
+    @param[in] w width position
+    @param[in] k height position
+    @param[in] stock from which order is cut
+    */
+    void pack( int l, int w, int h, space_t stock );
 
     bool fit( const cSpace& squeeze ) const
     {
@@ -55,7 +66,7 @@ public:
     {
         myUserID = id;
     }
-        bool isPacked() const
+    bool isPacked() const
     {
         return myPacked;
     }
@@ -71,117 +82,35 @@ public:
     {
         myCount = c;
     }
+    // set the location of the top of the highest level cut
+    void level( int h )
+    {
+        myLevel = h;
+    }
+    int level() const
+    {
+        return myLevel;
+    }
+        void used( bool f = true )
+    {
+        myUsed = f;
+    }
+    bool isUsed() const
+    {
+        return myUsed;
+    }
     std::string text();
+
 private:
     int         myCount;
     std::string myUserID;
     bool        myPacked;      // true if an order that has been allocated
     bool        myUsedbyLevel;  // true if stock has been allocated to current level
-
+    int         myLevel;         // the location of the top of the highest level cut
+    bool        myUsed;        // true if a stock that has been used to cut orders
+    space_t     myStock;   // if an allocated order, the stock allocated to
 };
 
-//class cTimber : public cSpace
-//{
-//public:
-//    cTimber()
-//        : cSpace( 0, 0, 0 )
-//        , myCount( 1 )
-//        , myPacked( false )
-//        , myUsed( false )
-//    {
-//
-//    }
-//    cTimber( int L, int W, int H )
-//        : cSpace( L, W, H )
-//        , myCount( 1 )
-//        , myPacked( false )
-//        , myUsed( false )
-//
-//    {
-//
-//    }
-//
-//
-//    /** Cut the order
-//        @param[in] l length position
-//        @param[in] w width position
-//        @param[in] k height position
-//        @param[in] stock timber from which order is cut
-//    */
-//    void pack( int l, int w, int h, space_t stock );
-//
-//    std::string text();
-//
-//    bool isPacked() const
-//    {
-//        return myPacked;
-//    }
-//
-//    void used( bool f = true )
-//    {
-//        myUsed = f;
-//    }
-//    bool isUsed() const
-//    {
-//        return myUsed;
-//    }
-//
-//    // set the location of the top of the highest level cut
-//    void level( int h )
-//    {
-//        myLevel = h;
-//    }
-//    int level() const
-//    {
-//        return myLevel;
-//    }
-//
-//    void usedbyLevel( bool f )
-//    {
-//        myUsedbyLevel = f;
-//    }
-//    bool isUsedbyLevel()
-//    {
-//        return myUsedbyLevel;
-//    }
-//
-//    std::string myUserID;
-//
-//
-//private:
-//    bool myPacked;      // true if an order that has been allocated
-//    space_t myStock;   // if an allocated order, the stock allocated to
-//    bool myUsed;        // true if a stock that haveen used to cut orders
-//    int myLevel;         // the location of the top of the highest level cut
-//    bool myUsedbyLevel;  // true if stock has been allocated to current level
-//};
-
-//class cInventory
-//{
-//public:
-//    void clear();
-//    //void add( space_t t );
-//    //void expandCount();
-//    //std::string text();
-//    //std::string textDetails();
-//
-//    /** Sort inventory into stock, sheets and scraps
-//    @param[in] sheetHeight maximum sheet height
-//    @param[in] scrapWidth maximum scrap width
-//
-//    This will allow inentory returns, if present,
-//    to be optimised.
-//
-//    tid7
-//    */
-//    //void sortInventory( int sheetHeight, int scrapWidth );
-//
-//public:
-//    spaceV_t myInventory;      /// inentory ( all timbers labeled 'i' in the instance file )
-////    spaceV_t myScrap;          /// inventory fpr 1D cutting
-////    spaceV_t mySheet;          /// inventory for 2D cutting
-//    spaceV_t myStock;          /// invemtory for 3D cutting
-//};
 class cCut
 {
 public:
@@ -427,4 +356,18 @@ void ReturnToInventory(
 void DisplayWastage(
     cInstance& I );
 
+/// Use pack2 engine to do 2D level cutting
+void CS2Pack2(
+    cInstance& I,
+    cLevel& level, int h );
+
+/** Record the V cut for a level in the instance
+@param[in] I the instance
+@param[in] stock
+@param[in] h height for cut at top of level
+*/
+void CutLevel(
+    cInstance& I,
+    space_t stock,
+    int h );
 }

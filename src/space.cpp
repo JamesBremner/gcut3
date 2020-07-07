@@ -71,6 +71,17 @@ void cSpace::rotateLWH()
 //    std::cout << "\n";
 }
 
+void cSpace::pack( int l, int w, int h, space_t stock )
+{
+    std::cout << "packing " << myUserID << " into " << stock->ID() << "\n";
+    myPacked = true;
+    myLocL = l;
+    myLocW = w;
+    myLocH = h;
+    myStock = stock;
+    stock->used();
+}
+
 std::string cSpace::text()
 {
     std::stringstream ss;

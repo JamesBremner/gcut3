@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include "gcut3.h"
+#include "pack2.h"
 
 namespace c3 {
 
@@ -131,12 +132,7 @@ void LevelCuts(
 
                 // Use 2D cutting algorithm to cut orders from level.
 
-#ifdef USE_CS2LNW
-                allPacked = CS2LNW( I, level, h );
-#endif // USE_CS2LNW
-#ifdef USE_CS2Pack2
                 CS2Pack2( I, level, h );
-#endif // CS2Pack2
 
                 // remove packed timbers from level
                 int ret = level.removePacked();
@@ -184,6 +180,152 @@ void LevelCuts(
         // success
         return;
     }
+}
+void CS2Pack2(
+    cInstance& I,
+    cLevel& level, int h )
+{
+    // load level into pack2 engine
+    pack2::cPackEngine E;
+
+    E.add( pack2::bin_t( new pack2::cBin( "stock",
+                                          level.myStock->myLength,
+                                          level.myStock->myWidth )) );
+    int k = 0;
+    for( space_t& t : level.myOrder )
+    {
+        E.addItem(
+            std::to_string( k++ )+"_"+t->ID(),
+            t->myLength, t->myWidth );
+    }
+
+    // run the Pack2 engine
+    Pack( E );
+
+//    std::cout << "Pack2 cutlist\n";
+//    for( auto& c : pack2::CutListEndPoints( E ) )
+//    {
+//        for( int v : c )
+//            std::cout << v << ", ";
+//        std::cout << "\n";
+//    }
+//
+//    std::cout << "\nPack2 csv\n";
+//    std::cout << pack2::CSV( E );
+
+
+    // loop over items in level, allocating orders that fit
+    int packedCount = 0;
+    for( pack2::item_t item : E.items() )
+    {
+        if( ! item->isPacked() )
+            continue;
+
+        packedCount++;
+        if( packedCount == 1 )
+        {
+            /* We are going to cut at least one order for this level from this stock
+                first we need to cut the level from the stock.
+                so record the level cut in the instance
+                unless at top of stock
+            */
+            CutLevel(
+                I,
+                level.myStock,
+                h + level.height() );
+        }
+
+        AllocateOrder(
+            I,
+            level,
+            atoi( item->userID().c_str() ),
+            item->locX(), item->locY(), h );
+    }
+
+    // check for nothing packed
+    if( ! packedCount )
+    {
+        std::cout << "nothing fit\n";
+        return;
+    }
+
+    // at least one order was cut for this stock
+    // store cuts in the instance
+
+    /* Loop over cuts in level
+
+        The pack2 engine returns a vector of vectors, one for each bin
+        There is only one bin, the level,
+        so we need only look at the first vector of cuts
+    */
+    auto cl = CutList( E )[0];
+    for( auto& c : cl )
+    {
+        // check if cut is at stock boundary
+        char LW;
+        if( c.myIsVertical )
+        {
+            // vertical cuts in pack2 ( which is 2d ) are orthogonasl to the length dimension in 3D
+            if( c.myIntercept == 0 || c.myIntercept == level.myStock->myLength )
+                continue;   // unneccesary cut at stock edge
+            LW = 'L';
+        }
+        else
+        {
+            // horizontal cuts in pack2 ( which is 2d ) are orthogonasl to the width dimension in 3D
+            if( c.myIntercept == 0 || c.myIntercept == level.myStock->myWidth )
+                continue;   // unneccesary cut at stock edge
+            LW = 'W';
+        }
+        // construct a 3D cut
+        cCut cut(
+            level.myStock,
+            LW,
+            c.myIntercept,
+            h );
+
+        //std::cout << cut.text() << "\n\n";
+
+        // add it to the instance cut list
+        I.add( cut );
+    }
+}
+void CutLevel(
+    cInstance& I,
+    space_t stock,
+    int h )
+{
+
+    stock->level( h );
+
+    if( h == stock->myHeight )
+    {
+        //no need for a cut, we are at the top of the stock
+        return;
+    }
+    I.add( cCut(
+               stock,
+               'H',
+               h,
+               h ));
+}
+void AllocateOrder(
+    cInstance& I,
+    cLevel& level,
+    int order,
+    int length, int width, int height )
+{
+    // allocate order to stock
+    level.myOrder[ order ]->pack( length, width, height, level.myStock );
+
+    // record allocation
+    I.allocate( level.myOrder[ order ], level.myStock  );
+
+    // mark stock as used
+    level.myStock->used();
+
+    // record how much of level used
+    level.use( level.myOrder[ order ] );
 }
 
 }
