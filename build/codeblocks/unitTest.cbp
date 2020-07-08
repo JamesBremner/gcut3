@@ -45,7 +45,6 @@
 		<Unit filename="../../../pack2/src/cShape.cpp" />
 		<Unit filename="../../../pack2/src/pack2.cpp" />
 		<Unit filename="../../../raven-set/cutest.cpp" />
-		<Unit filename="../../src/TimberAllocation.h" />
 		<Unit filename="../../src/gcut3.cpp" />
 		<Unit filename="../../src/gcut3.h" />
 		<Unit filename="../../src/instance.cpp" />

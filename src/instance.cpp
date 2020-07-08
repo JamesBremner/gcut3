@@ -94,8 +94,8 @@ std::string cInstance::textSolution()
     }
     for( auto& c : myCut )
     {
-//        ss << c.text() << "\n";
-        ss << "todo: cutlist text" << "\n";
+        ss << c.text() << "\n";
+//        ss << "todo: cutlist text" << "\n";
     }
     for( auto& u : myUnpacked )
     {

@@ -31,7 +31,16 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="../../../pack2/src" />
 		</Compiler>
+		<Linker>
+			<Add option="-static-libstdc++" />
+			<Add option="-static-libgcc" />
+			<Add option="-static" />
+		</Linker>
+		<Unit filename="../../../pack2/src/cCut.cpp" />
+		<Unit filename="../../../pack2/src/pack2.cpp" />
+		<Unit filename="../../src/cut.cpp" />
 		<Unit filename="../../src/gcut3.cpp" />
 		<Unit filename="../../src/gcut3.h" />
 		<Unit filename="../../src/instance.cpp" />
