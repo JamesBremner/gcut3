@@ -30,6 +30,9 @@ int main( int argc, char* argv[] )
         // display solution
         std::cout << I.textSolution();
 
+        ofstream of("gcut3results.txt");
+        of << I.textSolution();
+
     }
     catch( std::runtime_error& e )
     {
