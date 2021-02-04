@@ -11,7 +11,7 @@ using namespace std;
 namespace c3
 {
 
- int cSpace::ParseSpaceDelimited(
+int cSpace::ParseSpaceDelimited(
     const std::string& l )
 {
     std::vector< std::string > token;
@@ -19,6 +19,17 @@ namespace c3
     std::string a;
     while( getline( sst, a, ' ' ) )
         token.push_back( a );
+
+    token.erase(
+        remove_if(
+            token.begin(),
+            token.end(),
+            [] ( std::string t )
+    {
+        return( t.empty() );
+    } ),
+    token.end() );
+
     if( token.size() < 6 )
         throw std::runtime_error(" Error reading: " + l );
     myLength = atoi(token[1].c_str());
@@ -73,7 +84,8 @@ void cSpace::rotateLWH()
 
 void cSpace::pack( int l, int w, int h, space_t stock )
 {
-    std::cout << "packing " << myUserID << " into " << stock->ID() << "\n";
+    std::cout << "packing " << myUserID << " into " << stock->ID() << " "
+        << l <<" "<< w <<" "<< h << "\n";
     myPacked = true;
     myLocL = l;
     myLocW = w;

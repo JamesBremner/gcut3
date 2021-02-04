@@ -90,7 +90,11 @@ std::string cInstance::textSolution()
     for( auto& a : myAllocation )
     {
         ss << "a " << a.second->ID()
-           <<" "<< a.first->ID() << "\n";
+           <<" "<< a.first->ID()
+           <<" "<< a.first->myLocL
+           <<" "<< a.first->myLocW
+           <<" "<< a.first->myLocH
+            << "\n";
     }
     for( auto& c : myCut )
     {

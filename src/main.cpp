@@ -37,6 +37,8 @@ int main( int argc, char* argv[] )
     catch( std::runtime_error& e )
     {
         std::cout << "exception: " << e.what() << "\n";
+        ofstream of("gcut3results.txt");
+        of << "exception: " << e.what() << "\n";
     }
     return 0;
 }

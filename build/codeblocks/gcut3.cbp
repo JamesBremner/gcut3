@@ -8,9 +8,12 @@
 		<Build>
 			<Target title="Debug">
 				<Option output="../../bin/gcut3" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc_v83" />
+				<Option use_console_runner="0" />
+				<Option parameters="instance.dat" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -47,10 +50,6 @@
 		<Unit filename="../../src/level.cpp" />
 		<Unit filename="../../src/main.cpp" />
 		<Unit filename="../../src/space.cpp" />
-		<Extensions>
-			<code_completion />
-			<envvars />
-			<debugger />
-		</Extensions>
+		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
