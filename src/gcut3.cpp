@@ -7,7 +7,8 @@
 #include "gcut3.h"
 #include "pack2.h"
 
-namespace c3 {
+namespace c3
+{
 
 void Levels( cInstance& I )
 {
@@ -107,10 +108,12 @@ void LevelCuts(
 {
     bool allPacked;
 
+    int h = 0;                      // start at the bottom
+
     // loop over levels
     for( cLevel& level : I.levels() )
     {
-        std::cout << "cutting level " << level.text() << "\n";
+        //std::cout << "cutting level h= "<< h <<" " << level.text() << "\n";
 
         for( space_t t : I.stock() )
             t->usedbyLevel( false );
@@ -125,7 +128,7 @@ void LevelCuts(
             */
             allPacked = false;
             for(
-                int h = 0;                      // start at the bottom
+                ;
                 h < level.myStock->myHeight;    // does stock have enough height to stack another level?
                 h += level.height() )           // up one level
             {
@@ -141,6 +144,7 @@ void LevelCuts(
                 {
                     // all timbers in this level are packed
                     std::cout << "all timbers in this level are packed\n";
+                    h += level.height();
                     allPacked = true;
                     break;
                 }
@@ -170,6 +174,7 @@ void LevelCuts(
                     I.addUnpacked( level.myOrder );
                     return;
                 }
+                h = 0;                      // start at the bottom
             }
 
         }
@@ -185,6 +190,8 @@ void CS2Pack2(
     cInstance& I,
     cLevel& level, int h )
 {
+    //std::cout << "CS2Pack2 " << h << "\n";
+
     // load level into pack2 engine
     pack2::cPackEngine E;
 
@@ -295,10 +302,10 @@ void CutLevel(
     space_t stock,
     int h )
 {
-
+    //std::cout << "CutLevel " << h <<" "<< stock->text() << "\n";
     stock->level( h );
 
-    if( h == stock->myHeight )
+    if( h >= stock->myHeight )
     {
         //no need for a cut, we are at the top of the stock
         return;

@@ -357,11 +357,6 @@ void ReturnToInventory(
 void DisplayWastage(
     cInstance& I );
 
-/// Use pack2 engine to do 2D level cutting
-void CS2Pack2(
-    cInstance& I,
-    cLevel& level, int h );
-
 /** Record the V cut for a level in the instance
 @param[in] I the instance
 @param[in] stock
