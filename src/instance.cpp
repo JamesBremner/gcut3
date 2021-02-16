@@ -43,14 +43,14 @@ void cInstance::read(
 
 void cInstance::cut()
 {
-        // sort orders into levels of the same height
-        Levels( *this );
+    // sort orders into levels of the same height
+    Levels( *this );
 
-        // allocate levels to stock
-        LevelsToStock( *this );
+    // allocate levels to stock
+    LevelsToStock( *this );
 
-        // cut out orders from stock by level
-        LevelCuts( *this );
+    // cut out orders from stock by level
+    LevelCuts( *this );
 }
 
 void cInstance::expandCount()
@@ -65,8 +65,8 @@ void cInstance::expandCount( spaceV_t& tv )
     {
         spaceV_t sv = s->expand();
         ex.insert(
-                  ex.end(),
-                  sv.begin(), sv.end() );
+            ex.end(),
+            sv.begin(), sv.end() );
     }
     std::cout << "cInstance::expandCount " << tv.size() <<" "<< ex.size() << "\n";
     tv.insert(
@@ -94,7 +94,8 @@ std::string cInstance::textSolution()
            <<" "<< a.first->myLocL
            <<" "<< a.first->myLocW
            <<" "<< a.first->myLocH
-            << "\n";
+           <<" "<< a.first->isSpun()
+           << "\n";
     }
     for( auto& c : myCut )
     {

@@ -204,6 +204,7 @@ void CS2Pack2(
         E.addItem(
             std::to_string( k++ )+"_"+t->ID(),
             t->myLength, t->myWidth );
+        E.items().back()->spinEnable();
     }
 
     // run the Pack2 engine
@@ -246,7 +247,8 @@ void CS2Pack2(
             I,
             level,
             atoi( item->userID().c_str() ),
-            item->locX(), item->locY(), h );
+            item->locX(), item->locY(), h,
+            item->isSpun() );
     }
 
     // check for nothing packed
@@ -320,10 +322,13 @@ void AllocateOrder(
     cInstance& I,
     cLevel& level,
     int order,
-    int length, int width, int height )
+    int length, int width, int height,
+    bool fSpun )
 {
     // allocate order to stock
     level.myOrder[ order ]->pack( length, width, height, level.myStock );
+    if( fSpun )
+        level.myOrder[ order ]->spun();
 
     // record allocation
     I.allocate( level.myOrder[ order ], level.myStock  );

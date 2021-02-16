@@ -23,6 +23,7 @@ public:
         , myCount( 1 )
         , myPacked( false )
         , myUsed( false )
+        , myfSpun( false )
     {
 
     }
@@ -92,13 +93,21 @@ public:
     {
         return myLevel;
     }
-        void used( bool f = true )
+    void used( bool f = true )
     {
         myUsed = f;
     }
     bool isUsed() const
     {
         return myUsed;
+    }
+    void spun()
+    {
+        myfSpun = true;
+    }
+    bool isSpun() const
+    {
+        return myfSpun;
     }
     std::string text();
 
@@ -110,6 +119,7 @@ private:
     int         myLevel;         // the location of the top of the highest level cut
     bool        myUsed;        // true if a stock that has been used to cut orders
     space_t     myStock;   // if an allocated order, the stock allocated to
+    bool        myfSpun;    // true if item has been spun to fit
 };
 
 class cCut
@@ -339,7 +349,8 @@ void AllocateOrder(
     cInstance& I,
     cLevel& level,
     int order,
-    int length, int width, int height );
+    int length, int width, int height,
+    bool fSpun );
 
 /** Record the V cut for a level in the instance
     @param[in] I the instance
