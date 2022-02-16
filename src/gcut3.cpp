@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <algorithm>
+#include <limits>
 #include "gcut3.h"
 #include "pack2.h"
 
